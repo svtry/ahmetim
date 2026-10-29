@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seviyorum Seni ❤️‍🔥</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{background:linear-gradient(180deg,#140826 0%,#3d1456 40%,#8e2a6b 75%,#ff8fb1 100%);font-family:'Segoe UI',Arial,sans-serif}
+.star{position:fixed;background:#fff;border-radius:50%;animation:tw ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.3)}}
+.moon{position:fixed;top:5%;left:7%;font-size:70px;filter:drop-shadow(0 0 25px #ffe9a8);animation:glow 5s ease-in-out infinite}
+@keyframes glow{50%{transform:scale(1.1);filter:drop-shadow(0 0 40px #fff2c4)}}
+.shoot{position:fixed;width:120px;height:2px;background:linear-gradient(90deg,#fff,transparent);opacity:0;transform:rotate(25deg);animation:shoot linear infinite}
+@keyframes shoot{0%{opacity:0;transform:translate(0,0) rotate(25deg)}5%{opacity:1}30%{opacity:0;transform:translate(500px,230px) rotate(25deg)}100%{opacity:0}}
+.waves{position:fixed;left:0;bottom:0;width:100%;height:16%;z-index:2;animation:bob 6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(6px)}}
+#heart{position:fixed;inset:0;z-index:3;pointer-events:none}
+#heart span{position:absolute;color:#fff;font-weight:800;text-shadow:0 0 6px #ff2d6f,0 0 16px #ff6b9d;transform:translate(-50%,-50%);animation:beat 1.6s ease-in-out infinite}
+@keyframes beat{50%{transform:translate(-50%,-50%) scale(1.25)}}
+#heart .big{animation:bigbeat 1.1s ease-in-out infinite;text-shadow:0 0 25px #ff4d00}
+@keyframes bigbeat{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.3)}}
+#orbit{position:fixed;z-index:3;width:0;height:0;animation:spin 14s linear infinite;pointer-events:none}
+#orbit span{position:absolute;left:0;top:0;filter:drop-shadow(0 0 8px #ffe066)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.float{position:fixed;bottom:-50px;z-index:4;opacity:0;animation:rise linear infinite;pointer-events:none}
+@keyframes rise{0%{transform:translateY(0) scale(.6);opacity:0}10%{opacity:.95}100%{transform:translateY(-115vh) scale(1.2) rotate(25deg);opacity:0}}
+.buddy{position:fixed;bottom:3%;z-index:5;font-size:clamp(52px,13vw,100px);animation:hop 2.4s ease-in-out infinite;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.buddy.l{left:7%}
+.buddy.r{right:7%;animation-delay:-1.2s}
+@keyframes hop{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-22px) rotate(4deg)}}
+.mini{position:fixed;bottom:15%;z-index:5;font-size:clamp(22px,5vw,34px);animation:beat2 1.3s ease-in-out infinite}
+@keyframes beat2{50%{transform:scale(1.4)}}
+</style>
+</head>
+<body>
+
+<div class="moon">🌙</div>
+<div class="shoot" style="top:8%;left:15%;animation-duration:9s"></div>
+<div class="shoot" style="top:20%;left:45%;animation-duration:13s;animation-delay:-5s"></div>
+<div class="shoot" style="top:4%;left:60%;animation-duration:11s;animation-delay:-8s"></div>
+
+<svg class="waves" viewBox="0 0 1440 120" preserveAspectRatio="none">
+  <path d="M0,60 C180,20 360,100 540,60 C720,20 900,100 1080,60 C1260,20 1440,100 1440,60 L1440,120 L0,120Z" fill="rgba(255,255,255,0.14)"/>
+  <path d="M0,80 C200,50 400,110 600,80 C800,50 1000,110 1200,80 C1320,64 1400,90 1440,80 L1440,120 L0,120Z" fill="rgba(255,182,214,0.28)"/>
+</svg>
+
+<div id="heart"></div>
+<div id="orbit"></div>
+
+<div class="buddy l">🦭</div>
+<div class="buddy r">🐼</div>
+<div class="mini" style="left:20%">💕</div>
+<div class="mini" style="right:20%;animation-delay:-.6s">💕</div>
+
+<script>
+// ✏️ Yazıyı buradan değiştirebilirsin
+const MESSAGE="Seviyorum Seni Ahmet";
+
+const TXT=Array.from(MESSAGE).concat([" ","❤️"," "]);
+
+function build(){
+  const box=document.getElementById('heart');
+  const orb=document.getElementById('orbit');
+  box.innerHTML='';orb.innerHTML='';
+  const W=innerWidth,H=innerHeight;
+  const scale=Math.min(W*0.92/32,H*0.74/29);
+  const cx=W/2,cy=H*0.44;
+  [1,0.76,0.52].forEach(k=>{
+    const pts=[],n=600;
+    for(let i=0;i<=n;i++){
+      const t=i/n*2*Math.PI;
+      const x=16*Math.pow(Math.sin(t),3);
+      const y=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t));
+      pts.push([cx+x*scale*k,cy+(y-2.5)*scale*k]);
+    }
+    const cum=[0];
+    for(let i=1;i<pts.length;i++){
+      cum.push(cum[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));
+    }
+    const total=cum[cum.length-1];
+    const fs=Math.max(12,scale*1.15*(0.55+0.45*k));
+    const N=Math.floor(total/(fs*0.85));
+    const step=total/N;
+    let j=0;
+    for(let c=0;c<N;c++){
+      const target=c*step;
+      while(j<cum.length-1&&cum[j]<target)j++;
+      const tk=TXT[c%TXT.length];
+      if(tk===" ")continue;
+      const s=document.createElement('span');
+      s.textContent=tk;
+      s.style.left=pts[j][0]+'px';
+      s.style.top=pts[j][1]+'px';
+      s.style.fontSize=fs+'px';
+      s.style.animationDelay=(c*0.04)+'s';
+      box.appendChild(s);
+    }
+  });
+  // ortadaki ateşli kalp
+  const b=document.createElement('span');
+  b.className='big';
+  b.textContent='❤️‍🔥';
+  b.style.left=cx+'px';
+  b.style.top=(cy-scale*0.4)+'px';
+  b.style.fontSize=(scale*2.4)+'px';
+  box.appendChild(b);
+  // etrafında dönen yıldızlar
+  orb.style.left=cx+'px';
+  orb.style.top=(cy-scale*0.4)+'px';
+  const R=scale*2.6;
+  for(let i=0;i<8;i++){
+    const s=document.createElement('span');
+    s.textContent=i%2?'✨':'⭐';
+    s.style.fontSize=(scale*0.9)+'px';
+    s.style.transform='translate(-50%,-50%) rotate('+(i*45)+'deg) translateX('+R+'px)';
+    orb.appendChild(s);
+  }
+}
+build();
+addEventListener('resize',build);
+
+// Yıldızlı gökyüzü
+for(let i=0;i<90;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  const z=1+Math.random()*2.5;
+  s.style.width=s.style.height=z+'px';
+  s.style.left=(Math.random()*100)+'%';
+  s.style.top=(Math.random()*70)+'%';
+  s.style.animationDuration=(2+Math.random()*4)+'s';
+  s.style.animationDelay=(-Math.random()*5)+'s';
+  document.body.appendChild(s);
+}
+
+// Yükselen hayvanlar ve kalpler
+const F=['❤️‍🔥','💖','🦭','🐼','⭐','✨','💫','💗','🔥','💞'];
+for(let i=0;i<30;i++){
+  const f=document.createElement('div');
+  f.className='float';
+  f.textContent=F[Math.floor(Math.random()*F.length)];
+  f.style.left=(Math.random()*100)+'%';
+  f.style.fontSize=(18+Math.random()*24)+'px';
+  f.style.animationDuration=(8+Math.random()*9)+'s';
+  f.style.animationDelay=(-Math.random()*14)+'s';
+  document.body.appendChild(f);
+}
+</script>
+</body>
+</html>
